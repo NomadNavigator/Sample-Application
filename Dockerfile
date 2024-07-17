@@ -1,4 +1,4 @@
-# Use Golang base image
+# Use Golang base image for building and testing
 FROM golang:1.19 as builder
 
 # Set the Current Working Directory inside the container
@@ -7,17 +7,20 @@ WORKDIR /app
 # Copy the go mod and sum files
 COPY go.mod go.sum ./
 
-# Download all dependencies. Dependencies will be cached if the go.mod and go.sum files are not changed
+# Download all dependencies
 RUN go mod download
 
 # Copy the source from the current directory to the Working Directory inside the container
 COPY . .
 
+# Run tests
+RUN go test -v ./...
+
 # Build the Go app
 RUN go build -o main .
 
-# Start a new stage from scratch
-FROM alpine:latest  
+# Start a new stage from scratch for the runtime
+FROM alpine:latest
 
 # Set the Current Working Directory inside the container
 WORKDIR /root/
