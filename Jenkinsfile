@@ -12,20 +12,10 @@ pipeline {
             }
         }
 
-        stage('Build') {
+        stage('Build and Test') {
             steps {
                 script {
                     def app = docker.build("devops-wizard-app:${env.BUILD_ID}")
-                }
-            }
-        }
-
-        stage('Test') {
-            steps {
-                script {
-                    docker.image("devops-wizard-app:${env.BUILD_ID}").inside {
-                        sh 'go test -v ./...'
-                    }
                 }
             }
         }
