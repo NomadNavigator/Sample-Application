@@ -2,13 +2,18 @@ provider "aws" {
   region = "eu-north-1"
 }
 
+variable "private_key_content" {
+  description = "Contents of the private key"
+  type        = string
+}
+
 resource "aws_instance" "web" {
   ami           = "ami-0705384c0b33c194c"
   instance_type = "t3.micro"
-  key_name      = "aws-log"  # Name of the key pair created in AWS
+  key_name      = "devops-wizard-key"  # Name of the key pair created in AWS
 
   tags = {
-    Name = "DevOps-Wizard-Web-App"
+    Name = "DevOps-Wizard-Web"
   }
 
   provisioner "remote-exec" {
@@ -21,7 +26,7 @@ resource "aws_instance" "web" {
     connection {
       type        = "ssh"
       user        = "ec2-user"  # or "ubuntu" depending on the AMI
-      private_key = file("~/.ssh/id_rsa")  # Path to your private key
+      private_key = var.private_key_content  # Use the variable for the private key content
       host        = self.public_ip
     }
   }
