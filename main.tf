@@ -10,7 +10,7 @@ variable "private_key_content" {
 resource "aws_instance" "web" {
   ami           = "ami-0705384c0b33c194c"
   instance_type = "t3.micro"
-  key_name      = "aws-log"  # Update this to match the key pair name in AWS
+  key_name      = "aws-log"  # Ensure this matches the key pair name in AWS
 
   tags = {
     Name = "DevOps-Wizard-Web"
@@ -31,3 +31,4 @@ resource "aws_instance" "web" {
     }
   }
 }
+
