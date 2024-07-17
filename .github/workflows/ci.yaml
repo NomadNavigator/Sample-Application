@@ -70,11 +70,17 @@ jobs:
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-      run: terraform plan -var "private_key_content=${{ secrets.SSH_PRIVATE_KEY }}"
+      run: |
+        echo "${{ secrets.SSH_PRIVATE_KEY }}" > private_key.pem
+        chmod 600 private_key.pem
+        terraform plan -var "private_key_content=$(cat private_key.pem)"
 
     - name: Terraform Apply
       env:
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-      run: terraform apply -auto-approve -var "private_key_content=${{ secrets.SSH_PRIVATE_KEY }}"
+      run: |
+        echo "${{ secrets.SSH_PRIVATE_KEY }}" > private_key.pem
+        chmod 600 private_key.pem
+        terraform apply -auto-approve -var "private_key_content=$(cat private_key.pem)"
